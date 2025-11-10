@@ -124,9 +124,10 @@ type MenuCategoriesProps = {
 type MenuShowcaseProps = {
   items: MenuItem[];
   loading: boolean;
+  onSelectItem: (item: MenuItem) => void;
 };
 
-function MenuShowcase({ items, loading }: MenuShowcaseProps) {
+function MenuShowcase({ items, loading, onSelectItem }: MenuShowcaseProps) {
   const showcaseItems = items.slice(0, 5);
 
   return (
@@ -146,14 +147,14 @@ function MenuShowcase({ items, loading }: MenuShowcaseProps) {
           </div>
         </div>
         {loading ? (
-          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+          <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
             {Array.from({ length: 5 }).map((_, index) => (
               <div
                 key={`showcase-skeleton-${index}`}
-                className="h-full rounded-2xl border border-white/10 bg-white/5 p-4"
+                className="h-full rounded-2xl border border-white/10 bg-white/5 p-3 sm:p-4"
               >
-                <div className="h-32 w-full rounded-xl bg-white/10" />
-                <div className="mt-4 space-y-3">
+                <div className="h-24 w-full rounded-xl bg-white/10 sm:h-32" />
+                <div className="mt-3 space-y-2">
                   <div className="h-4 w-3/5 rounded-full bg-white/10" />
                   <div className="h-3 w-full rounded-full bg-white/10" />
                   <div className="h-3 w-2/3 rounded-full bg-white/10" />
@@ -166,7 +167,7 @@ function MenuShowcase({ items, loading }: MenuShowcaseProps) {
             Menu highlights are being crafted. Check back soon.
           </div>
         ) : (
-          <div className="mt-10 grid gap-4 [grid-template-columns:repeat(auto-fit,minmax(190px,1fr))]">
+          <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
             {showcaseItems.map((item, index) => (
               <motion.article
                 key={`${item.id}-${index}`}
@@ -174,9 +175,10 @@ function MenuShowcase({ items, loading }: MenuShowcaseProps) {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.3 }}
                 transition={{ duration: 0.45, delay: index * 0.05 }}
-                className="group relative flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-white/10 text-white shadow-[0_18px_45px_rgba(0,0,0,0.3)] backdrop-blur"
+                className="group relative flex cursor-pointer flex-col overflow-hidden rounded-2xl border border-white/10 bg-white/10 text-white shadow-[0_18px_45px_rgba(0,0,0,0.3)] backdrop-blur"
+                onClick={() => onSelectItem(item)}
               >
-                <div className="relative h-36 w-full overflow-hidden">
+                <div className="relative h-28 w-full overflow-hidden sm:h-36">
                   {item.imageUrl ? (
                     <Image
                       src={item.imageUrl}
@@ -196,9 +198,11 @@ function MenuShowcase({ items, loading }: MenuShowcaseProps) {
                   </div>
                 </div>
                 <div className="space-y-2 px-4 py-3">
-                  <div className="flex items-start justify-between gap-2">
-                    <h3 className="font-display text-base text-white">{item.name}</h3>
-                    <span className="rounded-full bg-white/10 px-2.5 py-0.5 text-[11px] text-white/80">
+                  <div className="space-y-1">
+                    <h3 className="line-clamp-1 font-display text-base text-white">
+                      {item.name}
+                    </h3>
+                    <span className="inline-flex w-fit rounded-md border border-white/15 bg-white/10 px-2.5 py-0.5 text-[11px] text-white/80">
                       ${item.price.toFixed(2)}
                     </span>
                   </div>
@@ -207,18 +211,7 @@ function MenuShowcase({ items, loading }: MenuShowcaseProps) {
                       {item.description}
                     </p>
                   ) : null}
-                  {item.tags?.length ? (
-                    <div className="flex flex-wrap gap-1.5 text-[9px] text-emerald-100/90">
-                      {item.tags.slice(0, 3).map((tag) => (
-                        <span
-                          key={`${item.id}-tag-${tag}`}
-                          className="rounded-full border border-emerald-200/40 bg-emerald-200/10 px-2 py-0.5 uppercase tracking-widest"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  ) : null}
+                  {/* tag chips removed */}
                 </div>
               </motion.article>
             ))}
@@ -274,15 +267,15 @@ function MenuCategories({
             {error}
           </div>
         ) : (
-          <div className="mt-8 grid w-full gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="mt-8 grid w-full grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3 xl:grid-cols-4">
             {loading ? (
               Array.from({ length: 4 }).map((_, index) => (
                 <div
                   key={`menu-skeleton-${index}`}
-                  className="min-h-[300px] w-full animate-pulse rounded-3xl border border-white/10 bg-white/5 p-5 sm:min-h-[340px]"
+                  className="min-h-[260px] w-full animate-pulse rounded-3xl border border-white/10 bg-white/5 p-4 sm:min-h-[320px] sm:p-5"
                 >
-                  <div className="h-48 w-full rounded-2xl bg-white/10 sm:h-[220px]" />
-                  <div className="mt-4 space-y-3">
+                  <div className="h-40 w-full rounded-2xl bg-white/10 sm:h-[220px]" />
+                  <div className="mt-3 space-y-3">
                     <div className="h-4 w-2/3 rounded-full bg-white/10" />
                     <div className="h-3 w-full rounded-full bg-white/10" />
                     <div className="h-3 w-1/2 rounded-full bg-white/5" />
@@ -297,10 +290,10 @@ function MenuCategories({
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, amount: 0.3 }}
                   transition={{ duration: 0.45, delay: index * 0.05 }}
-                  className="group relative flex min-h-[300px] w-full flex-col overflow-hidden rounded-3xl border border-white/10 bg-white/10 text-white shadow-[0_18px_45px_rgba(0,0,0,0.35)] backdrop-blur cursor-pointer sm:min-h-[340px]"
+                  className="group relative flex min-h-[260px] w-full flex-col overflow-hidden rounded-3xl border border-white/10 bg-white/10 text-white shadow-[0_18px_45px_rgba(0,0,0,0.35)] backdrop-blur cursor-pointer sm:min-h-[320px]"
                   onClick={() => onSelectItem(item)}
                 >
-                  <div className="relative h-48 w-full overflow-hidden sm:h-[220px]">
+                  <div className="relative h-40 w-full overflow-hidden sm:h-[220px]">
                     {item.imageUrl ? (
                       <Image
                         src={item.imageUrl}
@@ -321,9 +314,11 @@ function MenuCategories({
                   </div>
                   <div className="flex flex-1 flex-col justify-between space-y-2 px-4 py-3">
                     <div className="space-y-2">
-                      <div className="flex items-start justify-between gap-3">
-                        <h3 className="font-display text-base text-white">{item.name}</h3>
-                        <span className="rounded-full bg-white/10 px-3 py-0.5 text-xs text-white/70">
+                      <div className="space-y-1">
+                        <h3 className="line-clamp-1 font-display text-base text-white">
+                          {item.name}
+                        </h3>
+                        <span className="inline-flex w-fit rounded-md border border-white/15 bg-white/10 px-3 py-0.5 text-xs text-white/70">
                           ${item.price.toFixed(2)}
                         </span>
                       </div>
@@ -333,18 +328,7 @@ function MenuCategories({
                         </p>
                       ) : null}
                     </div>
-                    {item.tags?.length ? (
-                      <div className="flex flex-wrap gap-1.5 text-[10px]">
-                        {item.tags.map((tag) => (
-                          <span
-                            key={`${item.id}-${tag}`}
-                            className="rounded-full border border-emerald-200/40 bg-emerald-200/10 px-2 py-0.5 text-emerald-100"
-                          >
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-                    ) : null}
+                    {/* tag chips removed */}
                   </div>
                 </motion.article>
               ))
@@ -398,7 +382,7 @@ function HeroCarousel() {
   return (
     <section className="relative w-full px-4 sm:px-6 lg:px-10">
       <div className="relative overflow-hidden rounded-3xl border border-white/15 bg-white/10 shadow-[0_25px_80px_rgba(0,0,0,0.55)] backdrop-blur">
-        <div className="relative aspect-[4/5] w-full sm:aspect-[16/10] md:aspect-[16/6] lg:aspect-[16/5]">
+        <div className="relative aspect-[16/10] w-full sm:aspect-[16/7.5] md:aspect-[16/6] lg:aspect-[16/4.5]">
           <AnimatePresence initial={false} mode="wait">
             <motion.div
               key={currentSlide.image}
@@ -425,10 +409,10 @@ function HeroCarousel() {
               <span className="h-2 w-2 rounded-full bg-emerald-300 shadow-[0_0_12px_rgba(16,185,129,0.8)]" />
               {currentSlide.tag}
             </div>
-            <h2 className="max-w-2xl font-display text-3xl leading-snug text-white sm:text-4xl md:text-5xl">
+            <h2 className="max-w-2xl font-display text-2xl leading-snug text-white sm:text-3xl md:text-4xl">
               {currentSlide.title}
             </h2>
-            <p className="max-w-2xl text-sm text-white/75 sm:text-base md:text-lg">
+            <p className="max-w-2xl text-sm text-white/75 sm:text-[15px] md:text-lg">
               {currentSlide.description}
             </p>
             <div className="flex flex-wrap items-center gap-3 text-sm text-white/70">
@@ -556,7 +540,11 @@ export function LandingPage() {
         <SiteHeader />
         <HeroCarousel />
 
-        <MenuShowcase items={showcaseItems} loading={menuLoading} />
+        <MenuShowcase
+          items={showcaseItems}
+          loading={menuLoading}
+          onSelectItem={setSelectedItem}
+        />
         <MenuCategories
           categories={menuCategories}
           selectedCategory={selectedCategory}
@@ -633,41 +621,6 @@ export function LandingPage() {
                     </p>
                   </div>
                 ))}
-              </div>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-[1px]"
-            >
-              <div className="absolute inset-0 bg-gradient-to-br from-emerald-200/40 via-transparent to-amber-200/30 blur-xl" />
-              <div className="relative grid gap-5 bg-[#0e1914]/95 px-6 py-8 sm:px-8 sm:py-10">
-                <div className="space-y-2">
-                  <p className="text-xs uppercase tracking-[0.35em] text-white/50">
-                    Welcome Ritual
-                  </p>
-                  <p className="font-display text-[2rem] leading-tight text-white sm:text-[2.4rem] sm:leading-none">
-                    Iced Cardamom Chai
-                  </p>
-                  <p className="text-sm text-white/60">
-                    Coconut foam, pickled cucumber, and jasmine mist.
-                  </p>
-                </div>
-                <div className="grid gap-4 rounded-2xl border border-white/10 bg-white/5 p-5">
-                  <p className="font-display text-lg text-white">
-                    Botanical Pairings
-                  </p>
-                  <p className="text-sm text-white/70">
-                    Selection of tisanes, organic wines, and zero-proof cocktails
-                    with adaptogenic herbs from our garden.
-                  </p>
-                </div>
-                <div className="flex items-center justify-between rounded-full border border-white/10 bg-white/5 px-6 py-3 text-sm text-white/70">
-                  <span>Advance booking · 2 weeks</span>
-                  <ArrowRight className="h-4 w-4" />
-                </div>
               </div>
             </motion.div>
           </section>

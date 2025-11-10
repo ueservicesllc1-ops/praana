@@ -12,6 +12,7 @@ import {
   Pencil,
   Trash2,
   Search,
+  type LucideIcon,
 } from "lucide-react";
 import clsx from "clsx";
 import Image from "next/image";
@@ -34,7 +35,15 @@ import {
 } from "@/lib/firebase";
 import { ReservationTestEmail } from "@/components/reservation-test-email";
 
-const sidebarItems = [
+type SidebarItem = {
+  id: string;
+  label: string;
+  description: string;
+  icon: LucideIcon;
+  disabled?: boolean;
+};
+
+const sidebarItems: SidebarItem[] = [
   {
     id: "reservations",
     label: "Reservations",

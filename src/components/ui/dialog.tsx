@@ -81,11 +81,25 @@ export function DialogHeader({ children }: PropsWithChildren) {
   return <div className="space-y-2 border-b border-white/10 pb-4">{children}</div>;
 }
 
-export function DialogTitle({ children }: { children: ReactNode }) {
-  return <h2 className="font-display text-3xl text-white">{children}</h2>;
+type DialogTitleProps = {
+  children: ReactNode;
+  className?: string;
+};
+
+export function DialogTitle({ children, className }: DialogTitleProps) {
+  return (
+    <h2 className={clsx("font-display text-3xl text-white", className)}>
+      {children}
+    </h2>
+  );
 }
 
-export function DialogDescription({ children }: { children?: ReactNode }) {
+type DialogDescriptionProps = {
+  children?: ReactNode;
+  className?: string;
+};
+
+export function DialogDescription({ children, className }: DialogDescriptionProps) {
   if (!children) return null;
-  return <p className="text-sm text-white/60">{children}</p>;
+  return <p className={clsx("text-sm text-white/60", className)}>{children}</p>;
 }
