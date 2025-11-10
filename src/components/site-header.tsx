@@ -21,6 +21,7 @@ export function SiteHeader() {
   const [authLoading, setAuthLoading] = useState(true);
   const [authError, setAuthError] = useState<string | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
 
   useEffect(() => {
     const auth = getFirebaseAuth();
@@ -77,6 +78,9 @@ export function SiteHeader() {
     return () => {
       document.body.style.removeProperty("overflow");
     };
+    if (!isMenuOpen) {
+      setIsUserMenuOpen(false);
+    }
   }, [isMenuOpen]);
 
   const navItems = [
@@ -107,13 +111,13 @@ export function SiteHeader() {
               {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
             <Link href="#" className="flex items-center" onClick={closeMenu}>
-              <div className="relative h-9 w-36 overflow-visible sm:h-10 sm:w-48">
+              <div className="relative h-9 w-36 overflow-visible sm:h-10 sm:w-48 lg:h-12 lg:w-60">
                 <Image
                   src={LOGO_SRC}
                   alt="Praana By Paheli logo"
                   fill
                   sizes="224px"
-                  className="origin-left scale-[1.15] object-contain brightness-0 invert"
+                  className="origin-left scale-[1.15] object-contain brightness-0 invert lg:scale-[1.25]"
                   priority
                 />
               </div>
@@ -158,21 +162,49 @@ export function SiteHeader() {
               </a>
             </div>
             {currentUser ? (
-              <div className="hidden items-center gap-2 rounded-md border border-white/15 bg-white/10 px-3 py-1.5 text-sm text-white/80 md:flex">
-                <span className="flex h-8 w-8 items-center justify-center rounded-md bg-white/90 text-sm font-semibold text-emerald-950 uppercase">
-                  {userInitials || "U"}
-                </span>
-                <span className="max-w-[120px] truncate">
-                  {currentUser.displayName ?? currentUser.email ?? "Guest"}
-                </span>
+              <div className="relative hidden md:flex md:ml-4 lg:ml-6">
                 <button
                   type="button"
-                  onClick={handleSignOut}
-                  className="flex items-center gap-1 rounded-md border border-transparent px-2 py-1 text-xs text-white/70 transition hover:border-white/40 hover:text-white"
+                  onClick={() => setIsUserMenuOpen((prev) => !prev)}
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/10 text-sm font-semibold text-white transition hover:border-white/40 hover:bg-white/15"
+                  aria-haspopup="menu"
+                  aria-expanded={isUserMenuOpen}
                 >
-                  <LogOut className="h-3.5 w-3.5" />
-                  Sign out
+                  <span className="uppercase">
+                    {userInitials || "U"}
+                  </span>
                 </button>
+                <AnimatePresence>
+                  {isUserMenuOpen ? (
+                    <motion.div
+                      initial={{ opacity: 0, y: -8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -8 }}
+                      transition={{ duration: 0.15 }}
+                      className="absolute right-0 top-12 z-50 w-56 overflow-hidden rounded-2xl border border-white/15 bg-[#101b15]/95 shadow-lg"
+                    >
+                      <div className="border-b border-white/10 px-4 py-3 text-sm text-white/80">
+                        <p className="font-medium text-white">
+                          {currentUser.displayName ?? currentUser.email ?? "Guest"}
+                        </p>
+                        {currentUser.email ? (
+                          <p className="text-xs text-white/50">{currentUser.email}</p>
+                        ) : null}
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIsUserMenuOpen(false);
+                          void handleSignOut();
+                        }}
+                        className="flex w-full items-center gap-2 px-4 py-3 text-sm text-white/75 transition hover:bg-white/10 hover:text-white"
+                      >
+                        <LogOut className="h-4 w-4" />
+                        Sign out
+                      </button>
+                    </motion.div>
+                  ) : null}
+                </AnimatePresence>
               </div>
             ) : (
               <button
